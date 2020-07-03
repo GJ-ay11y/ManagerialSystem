@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gj.mapper.OwnerMapper">
+    <select id="fidnById" parameterType="int" resultType="HouseList">
+        select * from houselist where id = #{id};
+    </select>
+    <select id="findAll" resultType="HouseList">
+        select * from houselist;
+    </select>
+    <delete id="deleteHouseById" parameterType="int">
+        delete from houselist where id = #{id};
+    </delete>
+    <update id="updateHouse" parameterType="HouseList">
+        update houselist set houseid = #{houseid}, address = #{address}, area = #{area}, price = #{price}, status = #{status}
+        where id = #{id}
+    </update>
+    <insert id="addHouse" parameterType="HouseList">
+        insert into houselist (houseid, address, area, price, status) VALUES
+        (#{houseid}, #{address}, #{area}, #{price}, #{status})
+    </insert>
+    <select id="notLet" resultType="HouseList">
+        select * from houselist where status = '未租赁';
+    </select>
+    <select id="rented" resultType="HouseList">
+        select * from houselist where status = '已租赁';
+    </select>
+
+
+    <insert id="insertHeTong" parameterType="HeTong">
+        insert into hetong (chuzu, chuzu_idcard, zuke, zuke_idcard, fromdate, todate, price, address, house_id, payday) VALUES
+        (#{chuzu}, #{chuzu_idcard}, #{zuke}, #{zuke_idcard}, #{fromdate}, #{todate}, #{price}, #{address}, #{house_id}, #{payday});
+    </insert>
+    <select id="findAllHetong" resultType="HeTong">
+        select * from hetong;
+    </select>
+    <delete id="deleteHetongById" parameterType="int">
+        delete from hetong where id = #{id};
+    </delete>
+    <select id="findById" resultType="HeTong" parameterType="int">
+        select * from hetong where id = #{id};
+    </select>
+    <update id="updateHeTong" parameterType="HeTong">
+        update hetong set chuzu = #{chuzu}, chuzu_idcard = #{chuzu_idcard}, zuke = #{zuke}, zuke_idcard = #{zuke_idcard},
+                      fromdate = #{fromdate}, todate = #{todate}, price = #{price}, address = #{address}, house_id = #{house_id},
+                          payday = #{payday} where id = #{id};
+    </update>
+
+    <select id="findAllPaid" resultType="Paid">
+        select * from paid;
+    </select>
+    <select id="findUnPaid" resultType="Paid">
+        select *
+        from paid where status = '当月租金未缴';
+    </select>
+    <select id="findInPaid" resultType="Paid">
+        select * from paid where status = '当月租金已缴';
+    </select>
+    <insert id="insertPaid" parameterType="Paid">
+        insert into paid (house_id, address, price, date, name, userlist_id, status) VALUES
+        (#{house_id}, #{address}, #{price}, #{date},  #{name}, #{userlist_id}, '当月租金未缴');
+    </insert>
+    <select id="findByPaidId" resultType="Paid" parameterType="int">
+        select * from paid where id = #{id};
+    </select>
+    <update id="updatePaid" parameterType="Paid">
+        update paid set date = #{date}, paydate = #{paydate}, status = #{status} where id = #{id};
+    </update>
+
+
+    <!--分页-->
+    <!--房屋列表-->
+    <select id="selectHouseCount" resultType="int">
+        select count(*) from houselist;
+    </select>
+    <select id="findPage" resultType="HouseList">
+        select * from houselist limit #{start}, #{pageSize};
+    </select>
+    <!--合同列表-->
+    <select id="selectHetongCount" resultType="int">
+        select count(*) from hetong;
+    </select>
+    <select id="findPageHetong" resultType="HeTong">
+        select * from hetong limit #{start}, #{pageSize};
+    </select>
+    <!--已租列表-->
+    <select id="selectRentedCount" resultType="int">
+        select count(*) from houselist where status = '已租赁';
+    </select>
+    <select id="findPageRented" resultType="HouseList">
+        select * from houselist where status = '已租赁' limit #{start}, #{pageSize};
+    </select>
+    <!--未租列表-->
+    <select id="selectNotletCount" resultType="int">
+        select count(*) from houselist where status = '未租赁';
+    </select>
+    <select id="findPageNotlet" resultType="HouseList">
+        select * from houselist where status = '未租赁' limit #{start}, #{pageSize};
+    </select>
+    <!--租金列表-->
+    <select id="selectPaidCount" resultType="int">
+        select count(*) from paid;
+    </select>
+    <select id="findPagePaid" resultType="Paid">
+        select * from paid limit #{start}, #{pageSize};
+    </select>
+    <!--已缴租金列表-->
+    <select id="selectInpaidCount" resultType="int">
+        select count(*) from paid where status = '当月租金已缴';
+    </select>
+    <select id="findPageInpaid" resultType="Paid">
+        select * from paid where status = '当月租金已缴' limit #{start}, #{pageSize};
+    </select>
+    <!--未缴租金列表-->
+    <select id="selectUnpaidCount" resultType="int">
+        select count(*) from paid where status = '当月租金未缴';
+    </select>
+    <select id="findPageUnpaid" resultType="Paid">
+        select * from paid where status = '当月租金未缴' limit #{start}, #{pageSize};
+    </select>
+</mapper>
